@@ -1,0 +1,8 @@
+### IDE
+
+# Covers JetBrains IDEs
+.idea
+*.iml
+
+# Covers VSCode
+.vscode
