@@ -6,6 +6,9 @@ build
 # Dependency directories
 node_modules/
 
+# Jest coverage
+coverage/
+
 
 
 ### IDE
