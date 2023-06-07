@@ -13,13 +13,13 @@ It supports books with fields: isbn, title, author and genre.
 #### Get all books
 
 ```http request
-GET /books`
+GET /books
 ```
 
 #### Get book by id
 
 ```http request
-GET /books/{id}`
+GET /books/{id}
 ```
 
 #### Create book
@@ -35,6 +35,24 @@ Content-Type: application/json
     "genre": "Science Fiction"
 }
 ```
+
+## Practices and patterns
+
+### [Conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+
+The Conventional Commits specification is a lightweight convention on top of commit messages. It provides an easy set of
+rules for creating an explicit commit history; which makes it easier to write automated tools on top of. This convention
+dovetails with SemVer, by describing the features, fixes, and breaking changes made in commit messages.
+
+- **build**: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+- **ci**: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+- **docs**: Documentation only changes
+- **feat**: A new feature
+- **fix**: A bug fix
+- **perf**: A code change that improves performance
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- **test**: Adding missing tests or correcting existing tests
 
 ## License
 
