@@ -15,6 +15,10 @@ if (process.env.NODE_ENV === 'test') {
     });
 }
 
+http.all('*', (req: Request, res: Response): void => {
+    res.status(404).json(new ProblemDocument({status: 404}));
+});
+
 http.use((err: Error, req: Request, res: Response, _: NextFunction) => {
     console.error(err);
     res.status(503).json(new ProblemDocument({status: 503}));
