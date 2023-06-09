@@ -1,12 +1,15 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
 import { homepage } from '../package.json';
 import { ProblemDocument } from 'http-problem-details';
+import { BooksRouter } from './api/books';
 
 const http: Express = express();
 
 http.get('/', (req: Request, res: Response): void => {
     res.redirect(homepage);
 });
+
+http.use('/books', BooksRouter);
 
 export const UNHANDLED_ERROR_ROUTE: string = '/test-allways-unhandled-error';
 if (process.env.NODE_ENV === 'test') {
