@@ -1,6 +1,8 @@
 import mock from 'mock-fs';
+import fs from "fs";
 import {BooksRepository} from "../../../src/persistence/books-repository";
 import {ERR_BOOK_NOT_FOUND} from "../../../src/library/books/find-book-by-id-use-case";
+import {Book} from "../../../src/library/books/book";
 
 const existingBookId: string = 'b2f6f411-22cf-42f4-9634-43637cecf489';
 const nonExistingBookId: string = 'f0650381-d4be-4035-9b5d-343a0c2227dd';
@@ -12,17 +14,29 @@ const storedBook: object = {
     "genre": "Science Fiction",
     "createdAt": "2023-06-08T06:55:55.963Z"
 };
-
-mock({
-    'database': {
-        [`${existingBookId}.json`]: JSON.stringify(storedBook),
-    }
-});
+const newBook: Book = {
+    "id": nonExistingBookId,
+    "isbn": "978-3-16-148410-0",
+    "title": "The Hitchhiker's Guide to the Galaxy",
+    "author": "Douglas Adams",
+    "genre": "Science Fiction",
+    "createdAt": "2023-06-08T06:55:55.963Z"
+};
 
 describe('Books repository', () => {
     let service: BooksRepository;
     beforeEach(() => {
+        mock({
+            'database': {
+                [`${existingBookId}.json`]: JSON.stringify(storedBook),
+            }
+        });
+
         service = new BooksRepository('database');
+    });
+
+    afterEach(() => {
+        mock.restore();
     });
 
     test('finds book', async () => {
@@ -39,5 +53,28 @@ describe('Books repository', () => {
         } catch (err: any) {
             expect(err.message).toBe(ERR_BOOK_NOT_FOUND);
         }
+    });
+
+    test('persist book', async () => {
+        const storedBookPath = `database/${newBook.id}.json`;
+
+        const book = await service.persist(newBook);
+
+        expect(book).toStrictEqual(newBook);
+        expect(fs.existsSync(storedBookPath)).toBeTruthy();
+        expect(JSON.parse(fs.readFileSync(storedBookPath).toString())).toStrictEqual(newBook);
+    });
+
+    test('persist call on existing book override contents', async () => {
+        const storedBookPath = `database/${newBook.id}.json`;
+        const newerVersionOfBook: Book = {...newBook, title: 'new title'};
+
+        const originalBook = await service.persist(newBook);
+        const newerBook = await service.persist(newerVersionOfBook);
+
+        expect(newerBook).not.toStrictEqual(originalBook);
+        expect(newerBook).toStrictEqual(newerVersionOfBook);
+        expect(fs.existsSync(storedBookPath)).toBeTruthy();
+        expect(JSON.parse(fs.readFileSync(storedBookPath).toString())).toStrictEqual(newerVersionOfBook);
     });
 });
