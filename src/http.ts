@@ -1,15 +1,13 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
-import { homepage } from '../package.json';
 import { ProblemDocument } from 'http-problem-details';
 import { BooksRouter } from './api/books';
+import {HomeRouter} from "./api/home";
 
 const http: Express = express();
 
 http.use(express.json());
 
-http.get('/', (req: Request, res: Response): void => {
-    res.redirect(homepage);
-});
+http.use('/', HomeRouter);
 
 http.use('/books', BooksRouter);
 
