@@ -6,3 +6,10 @@ export interface Book {
     genre: string,
     createdAt: string,
 }
+
+export class CreateBookDto {
+    isbn?: string;
+    title?: string;
+    author?: string;
+    genre?: string;
+}

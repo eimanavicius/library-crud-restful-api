@@ -5,6 +5,8 @@ import { BooksRouter } from './api/books';
 
 const http: Express = express();
 
+http.use(express.json());
+
 http.get('/', (req: Request, res: Response): void => {
     res.redirect(homepage);
 });
