@@ -8,6 +8,13 @@ http.get('/', (req: Request, res: Response): void => {
     res.redirect(homepage);
 });
 
+export const UNHANDLED_ERROR_ROUTE: string = '/test-allways-unhandled-error';
+if (process.env.NODE_ENV === 'test') {
+    http.get(UNHANDLED_ERROR_ROUTE, () => {
+        throw new Error('Test unhandled error');
+    });
+}
+
 http.use((err: Error, req: Request, res: Response, _: NextFunction) => {
     console.error(err);
     res.status(503).json(new ProblemDocument({status: 503}));
