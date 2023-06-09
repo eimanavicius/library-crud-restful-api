@@ -1,5 +1,5 @@
-import server, {UNHANDLED_ERROR_ROUTE} from "../../src/http";
-import {homepage} from '../../package.json';
+import server, {UNHANDLED_ERROR_ROUTE} from "../../../src/http";
+import {homepage} from '../../../package.json';
 import request from "supertest";
 
 describe('Express setup', () => {

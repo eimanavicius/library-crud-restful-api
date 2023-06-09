@@ -1,11 +1,11 @@
 import request from "supertest";
-import {Book, CreateBookDto} from "../../src/library/books/book";
-import server from "../../src/http";
+import {Book, CreateBookDto} from "../../../src/library/books/book";
+import server from "../../../src/http";
 
-jest.mock('../../src/services');
+jest.mock('../../../src/services');
 
 describe('Books resource endpoint', () => {
-    const createBookUseCase = require('../../src/services').createBookUseCase;
+    const createBookUseCase = require('../../../src/services').createBookUseCase;
     const newBookId: string = '9a0c87d7-cd4a-4679-a7da-a86b2813470b';
     const newBook: Book = {
         'id': newBookId,

@@ -1,12 +1,12 @@
 import request from "supertest";
-import server from "../../src/http";
-import {Book} from "../../src/library/books/book";
-import {ERR_BOOK_NOT_FOUND} from "../../src/library/books/find-book-by-id-use-case";
+import server from "../../../src/http";
+import {Book} from "../../../src/library/books/book";
+import {ERR_BOOK_NOT_FOUND} from "../../../src/library/books/find-book-by-id-use-case";
 
-jest.mock('../../src/services');
+jest.mock('../../../src/services');
 
 describe('Books resource endpoint', () => {
-    const findBookByIdUseCase = require('../../src/services').findBookByIdUseCase;
+    const findBookByIdUseCase = require('../../../src/services').findBookByIdUseCase;
     const notExistingBookId: string = '9a0c87d7-cd4a-4679-a7da-a86b2813470b';
     const existingBookId: string = '41dd16cd-760d-4cfb-9ba2-26fe437666dc';
     const book: Book = {
