@@ -32,5 +32,11 @@
   "dependencies": {
     "express": "^4.18.2",
     "http-problem-details": "^0.1.5"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/**",
+      "data/**"
+    ]
   }
 }
