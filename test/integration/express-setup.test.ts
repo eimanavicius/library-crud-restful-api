@@ -24,4 +24,18 @@ describe('Express setup', () => {
                 });
             });
     });
+
+    it('not found routes return Problem Details response', () => {
+        return request(server)
+            .get('/test-i-do-not-exist')
+            .expect('content-type', /^application\/json/)
+            .expect(404)
+            .then(response => {
+                expect(response.body).toMatchObject({
+                    'type': 'about:blank',
+                    'title': 'Not Found',
+                    'status': 404
+                });
+            });
+    });
 });
