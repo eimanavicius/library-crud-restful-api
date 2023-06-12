@@ -1,8 +1,11 @@
 import { PersistBookUseCase } from './persist-book-use-case';
 import { Book, CreateBookDto } from './book';
 import { v4 as uuid } from 'uuid';
+import { Clock } from "../clock";
 
 export class CreateAndPersistBookUseCase {
+    clock: Clock = Clock.system();
+
     constructor(private readonly storage: PersistBookUseCase) {
     }
 
@@ -13,7 +16,7 @@ export class CreateAndPersistBookUseCase {
             title: request.title!,
             author: request.author!,
             genre: request.genre!,
-            createdAt: new Date().toISOString(),
+            createdAt: this.clock.now().toISOString(),
         });
     }
 }
