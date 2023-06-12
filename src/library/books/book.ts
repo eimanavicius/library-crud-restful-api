@@ -8,8 +8,8 @@ export interface Book {
 }
 
 export class CreateBookDto {
-    isbn?: string;
-    title?: string;
-    author?: string;
-    genre?: string;
+    isbn!: string;
+    title!: string;
+    author!: string;
+    genre!: string;
 }

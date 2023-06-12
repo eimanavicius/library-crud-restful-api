@@ -1,11 +1,12 @@
 import request from "supertest";
 import {Book, CreateBookDto} from "../../../src/library/books/book";
+import {ValidationError} from "../../../src/library/books/validate-create-book-dto-use-case";
 import server from "../../../src/http";
 
 jest.mock('../../../src/services');
 
 describe('Books resource endpoint', () => {
-    const createBookUseCase = require('../../../src/services').createBookUseCase;
+    const {createBookUseCase, validateCreateBookDtoUseCase} = require('../../../src/services')
     const newBookId: string = '9a0c87d7-cd4a-4679-a7da-a86b2813470b';
     const newBook: Book = {
         'id': newBookId,
@@ -24,6 +25,9 @@ describe('Books resource endpoint', () => {
 
     test('creates and returns location to book', () => {
         createBookUseCase.create.mockImplementationOnce(async () => newBook);
+        validateCreateBookDtoUseCase.validateCreateBookDto.mockImplementationOnce(
+            async () => newBookRequest
+        );
         return request(server)
             .post('/books')
             .send(newBookRequest)
@@ -49,6 +53,26 @@ describe('Books resource endpoint', () => {
                     'detail': 'Failed to persist book.',
                     'status': 424,
                     'title': 'Failed Dependency',
+                    'type': 'about:blank',
+                });
+            });
+    });
+
+    test('validation', () => {
+        validateCreateBookDtoUseCase.validateCreateBookDto.mockImplementationOnce(
+            async () => {throw new ValidationError('validation error test')}
+        );
+        return request(server)
+            .post(`/books`)
+            .send({
+                // invalid request
+            })
+            .expect(422)
+            .then(response => {
+                expect(response.body).toStrictEqual({
+                    'detail': 'validation error test',
+                    'status': 422,
+                    'title': 'Unprocessable Entity',
                     'type': 'about:blank',
                 });
             });
