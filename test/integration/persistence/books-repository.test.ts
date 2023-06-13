@@ -1,8 +1,10 @@
-import mock from 'mock-fs';
 import fs from "fs";
 import {BooksRepository} from "../../../src/persistence/books-repository";
 import {ERR_BOOK_NOT_FOUND} from "../../../src/library/books/find-book-by-id-use-case";
 import {Book} from "../../../src/library/books/book";
+
+const { vol } = require('memfs');
+jest.mock('fs');
 
 const existingBookId: string = 'b2f6f411-22cf-42f4-9634-43637cecf489';
 const nonExistingBookId: string = 'f0650381-d4be-4035-9b5d-343a0c2227dd';
@@ -26,17 +28,15 @@ const newBook: Book = {
 describe('Books repository', () => {
     let service: BooksRepository;
     beforeEach(() => {
-        mock({
-            'database': {
-                [`${existingBookId}.json`]: JSON.stringify(storedBook),
-            }
+        vol.fromJSON({
+                [`database/${existingBookId}.json`]: JSON.stringify(storedBook),
         });
 
         service = new BooksRepository('database');
     });
 
     afterEach(() => {
-        mock.restore();
+        vol.reset();
     });
 
     test('finds book', async () => {
