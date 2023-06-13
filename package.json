@@ -25,6 +25,7 @@
     "@types/node": "~18.16.16",
     "@types/supertest": "^2.0.12",
     "@types/uuid": "^9.0.1",
+    "memfs": "^3.5.3",
     "mock-fs": "^5.2.0",
     "nodemon": "^2.0.22",
     "supertest": "^6.3.3",
