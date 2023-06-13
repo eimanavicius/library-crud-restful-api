@@ -11,6 +11,16 @@ export class BooksRepository implements PersistBookUseCase, FindBookByIdUseCase 
         mkdirSync(this.indexDirectory, {recursive: true});
     }
 
+    findAll(page: number, size: number): Promise<Book[]> {
+        const files = fs.readdirSync(this.indexDirectory).sort().slice(page * size, (page + 1) * size);
+        const books: Book[] = [];
+        for (const file of files) {
+            const content = fs.readFileSync(path.join(this.indexDirectory, file), {encoding: 'utf8'});
+            books.push(JSON.parse(content));
+        }
+        return Promise.resolve(books);
+    }
+
     persist(book: Book): Promise<Book> {
         const original = path.join(this.directory, `${book.id}.json`);
         const indexed = path.join(

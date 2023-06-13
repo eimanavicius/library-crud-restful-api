@@ -3,7 +3,7 @@ import {BooksRepository} from "../../../src/persistence/books-repository";
 import {ERR_BOOK_NOT_FOUND} from "../../../src/library/books/find-book-by-id-use-case";
 import {Book} from "../../../src/library/books/book";
 
-const { vol } = require('memfs');
+const {vol} = require('memfs');
 jest.mock('fs');
 
 const existingBookId: string = 'b2f6f411-22cf-42f4-9634-43637cecf489';
@@ -30,7 +30,10 @@ describe('Books repository', () => {
     beforeEach(() => {
         vol.fromJSON({
             [`database/${existingBookId}.json`]: JSON.stringify(storedBook),
-            'database/.index': { /* empty directory */}
+            'database/.index/zxc-2023-uuid.json': '{"id": "zxc-2023-uuid"}',
+            'database/.index/123-2024-uuid.json': '{"id": "123-2024-uuid"}',
+            'database/.index/123-2023-uuid.json': '{"id": "123-2023-uuid"}',
+            'database/.index/abc-2023-uuid.json': '{"id": "abc-2023-uuid"}',
         });
 
         service = new BooksRepository('database');
@@ -82,5 +85,20 @@ describe('Books repository', () => {
         expect(newerBook).toStrictEqual(newerVersionOfBook);
         expect(fs.existsSync(storedBookPath)).toBeTruthy();
         expect(JSON.parse(fs.readFileSync(storedBookPath).toString())).toStrictEqual(newerVersionOfBook);
+    });
+
+    test('finds all books page 1', async () => {
+        const books = await service.findAll(0, 2);
+
+        expect(books).toHaveLength(2);
+        expect(books[0]).toStrictEqual({"id": "123-2023-uuid"});
+        expect(books[1]).toStrictEqual({"id": "123-2024-uuid"})
+    });
+
+    test('finds partial books page', async () => {
+        const books = await service.findAll(1, 3);
+
+        expect(books).toHaveLength(1);
+        expect(books[0]).toStrictEqual({"id": "zxc-2023-uuid"});
     });
 });
