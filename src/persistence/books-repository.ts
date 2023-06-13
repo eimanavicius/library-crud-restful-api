@@ -3,8 +3,9 @@ import {Book} from '../library/books/book';
 import fs, {mkdirSync} from 'fs';
 import path from 'path';
 import {ERR_BOOK_NOT_FOUND, FindBookByIdUseCase} from "../library/books/find-book-by-id-use-case";
+import {FindPagedBooksUseCase} from "../library/books/find-paged-books-use-case";
 
-export class BooksRepository implements PersistBookUseCase, FindBookByIdUseCase {
+export class BooksRepository implements PersistBookUseCase, FindBookByIdUseCase, FindPagedBooksUseCase {
     private readonly indexDirectory: string;
     constructor(private readonly directory: string) {
         this.indexDirectory = path.join(directory, '.index');
