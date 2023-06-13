@@ -29,7 +29,8 @@ describe('Books repository', () => {
     let service: BooksRepository;
     beforeEach(() => {
         vol.fromJSON({
-                [`database/${existingBookId}.json`]: JSON.stringify(storedBook),
+            [`database/${existingBookId}.json`]: JSON.stringify(storedBook),
+            'database/.index': { /* empty directory */}
         });
 
         service = new BooksRepository('database');
@@ -57,11 +58,16 @@ describe('Books repository', () => {
 
     test('persist book', async () => {
         const storedBookPath = `database/${newBook.id}.json`;
+        const indexedBookPath = "database/.index/" +
+            "The%20Hitchhiker%27s%20Guide%20to%20the%20Galaxy-" + // title
+            "2023-06-08T06%3A55%3A55%2E963Z-" + // createdAt
+            "f0650381-d4be-4035-9b5d-343a0c2227dd.json"; // id
 
         const book = await service.persist(newBook);
 
         expect(book).toStrictEqual(newBook);
         expect(fs.existsSync(storedBookPath)).toBeTruthy();
+        expect(fs.existsSync(indexedBookPath)).toBeTruthy();
         expect(JSON.parse(fs.readFileSync(storedBookPath).toString())).toStrictEqual(newBook);
     });
 
